@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Object detection and tracking</title>
+  <meta name="description" content="Real-time object detection and tracking in your browser using a pre-trained model and SORT.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div>
+        <h1>Object detection and tracking</h1>
+        <p class="sub">Runs in your browser. Your video stays on your device.</p>
+      </div>
+      <div class="actions">
+        <button id="btn-webcam" class="btn primary" disabled>Start webcam</button>
+        <button id="btn-file" class="btn" disabled>Open video file</button>
+        <button id="btn-stop" class="btn" disabled>Stop</button>
+        <input id="file-input" type="file" accept="video/*" hidden>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="stage-col" aria-label="Video">
+        <div class="stage">
+          <canvas id="canvas" hidden></canvas>
+          <div id="empty" class="empty">
+            <p class="empty-title">Pick a video source to begin</p>
+            <p class="empty-text">Start your webcam or open a video file. Each object gets a box, a label, and an ID that stays with it as it moves.</p>
+          </div>
+          <video id="video" class="hidden-video" playsinline muted></video>
+        </div>
+        <p id="message" class="message" role="status" aria-live="polite">Loading detection model…</p>
+        <dl class="stats">
+          <div><dt>Frames per second</dt><dd id="stat-fps">0</dd></div>
+          <div><dt>Objects in view</dt><dd id="stat-count">0</dd></div>
+          <div><dt>IDs assigned</dt><dd id="stat-ids">0</dd></div>
+          <div><dt>Backend</dt><dd id="stat-backend">-</dd></div>
+        </dl>
+      </section>
+
+      <aside class="side">
+        <section class="panel" aria-labelledby="tracked-title">
+          <h2 id="tracked-title">Tracked now</h2>
+          <ul id="tracked" class="tracked">
+            <li class="tracked-empty">No objects in view yet.</li>
+          </ul>
+        </section>
+
+        <section class="panel" aria-labelledby="settings-title">
+          <h2 id="settings-title">Settings</h2>
+
+          <label class="field">
+            <span class="field-head"><span>Confidence to start tracking</span><output id="conf-out">40%</output></span>
+            <input id="conf" type="range" min="10" max="90" step="5" value="40">
+          </label>
+
+          <label class="field">
+            <span class="field-head"><span>Keep lost objects for</span><output id="age-out">30 frames</output></span>
+            <input id="age" type="range" min="5" max="90" step="5" value="30">
+          </label>
+
+          <label class="check">
+            <input id="trails" type="checkbox" checked>
+            <span>Show movement trails</span>
+          </label>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <!-- ONNX Runtime Web + YOLOv8n detector (80 object classes) -->
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/ort.all.min.js"></script>
+  <script src="yolo.js"></script>
+  <script src="sort.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

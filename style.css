@@ -1,0 +1,26 @@
+/*
+1.Sets the color theme (light gray page, white panels, blue accent) using reusable CSS variables
+2.Lays out the page in two columns: the video area on the left and a 320px sidebar on the right
+3.Styles the dark 16:9 video stage and the "empty" message shown before a video starts
+4.Hides the real <video> element so only the canvas with the drawn boxes is visible
+5.Styles the buttons, including a blue primary button with hover and disabled states
+6.Styles the four stat cards (FPS, objects in view, IDs assigned, backend)
+7.Styles the tracked-objects list with a color swatch, name, ID and confidence
+8.Styles the sliders, dropdown and checkbox in the settings panel
+9.Shows status messages in gray, and error messages in red
+10.Adapts the layout for tablets and phones (the sidebar moves below the video on smaller screens)
+11.Adds keyboard focus outlines and turns off animations for users who prefer reduced motion
+*/
+/*
+CSS ভেরিয়েবল ব্যবহার করে রঙের থিম ঠিক করে (হালকা ধূসর পেজ, সাদা প্যানেল, নীল অ্যাকসেন্ট)
+পেজকে দুই কলামে সাজায়: বাম দিকে ভিডিওর জায়গা, ডান দিকে ৩২০px-এর সাইডবার
+গাঢ় রঙের ১৬:৯ ভিডিও স্টেজ এবং ভিডিও শুরুর আগে দেখানো "empty" বার্তাটি স্টাইল করে
+আসল <video> এলিমেন্টটি লুকিয়ে রাখে, যাতে শুধু বক্স আঁকা ক্যানভাসটি দেখা যায়
+বাটনগুলো স্টাইল করে, নীল প্রাইমারি বাটন এবং hover ও disabled অবস্থাসহ
+চারটি স্ট্যাট কার্ড (FPS, দৃশ্যে থাকা বস্তু, মোট ID, ব্যাকএন্ড) স্টাইল করে
+ট্র্যাক করা বস্তুর তালিকা স্টাইল করে, যেখানে থাকে রঙের চিহ্ন, নাম, ID ও কনফিডেন্স
+সেটিংস প্যানেলের স্লাইডার, ড্রপডাউন ও চেকবক্স স্টাইল করে
+সাধারণ বার্তা ধূসর রঙে এবং ত্রুটির বার্তা লাল রঙে দেখায়
+ট্যাবলেট ও ফোনের জন্য লেআউট মানিয়ে নেয় (ছোট স্ক্রিনে সাইডবার ভিডিওর নিচে চলে যায়)
+কিবোর্ড ব্যবহারকারীদের জন্য ফোকাস আউটলাইন যোগ করে এবং যারা অ্যানিমেশন কমাতে চান তাদের জন্য অ্যানিমেশন বন্ধ করে দেয়
+*/
