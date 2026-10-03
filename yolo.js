@@ -29,10 +29,26 @@
 
   async function load(url) {
     ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/';
-    const gpu = !!navigator.gpu;
-    const session = await ort.InferenceSession.create(url, {
-      executionProviders: gpu ? ['webgpu', 'wasm'] : ['wasm'],
-    });
+    // Try WebGPU first, then WASM. Each attempt has a timeout so a stuck GPU
+    // start-up can never leave the page on "Loading detection model…".
+    const tryOrder = navigator.gpu ? ['webgpu', 'wasm'] : ['wasm'];
+    let session = null;
+    let backend = '';
+    let lastErr = null;
+    for (const ep of tryOrder) {
+      try {
+        session = await Promise.race([
+          ort.InferenceSession.create(url, { executionProviders: [ep] }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error(ep + ' took too long to start')), 25000)),
+        ]);
+        backend = ep === 'webgpu' ? 'WebGPU' : 'WASM';
+        break;
+      } catch (err) {
+        console.warn('Execution provider failed:', ep, err);
+        lastErr = err;
+      }
+    }
+    if (!session) throw lastErr || new Error('No execution provider available');
     const inName = session.inputNames[0];
 
     async function detect(src, minScore = 0.25) {
@@ -85,7 +101,7 @@
       }));
     }
 
-    return { backend: gpu ? 'WebGPU' : 'WASM', detect };
+    return { backend, detect };
   }
 
   root.Yolo = { load };

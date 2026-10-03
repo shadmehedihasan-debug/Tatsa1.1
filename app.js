@@ -2,7 +2,7 @@
  * Real-time object detection and tracking in the browser.
  *
  *  1. Video input:   webcam (getUserMedia) or a local video file
- *  2. Detection:     pre-trained COCO-SSD model (TensorFlow.js)
+ *  2. Detection:     pre-trained YOLOv8n model (onnxruntime-web)
  *  3. Per frame:     detect objects and get bounding boxes
  *  4. Tracking:      SORT (see sort.js)
  *  5. Display:       boxes, class labels and tracking IDs drawn on a canvas
@@ -63,7 +63,7 @@
       setSourceButtons(true);
     } catch (err) {
       console.error(err);
-      setMessage('The detection model could not be loaded. Make sure yolov8n.onnx is in the project folder and you are online, then reload.', true);
+      setMessage('The detection model could not be loaded (' + (err && err.message ? err.message : err) + '). Make sure yolov8n.onnx is in the project folder, you are online, and the page is served over http(s) rather than opened as a file, then reload.', true);
     }
   }
 

@@ -1,26 +1,133 @@
-/*
-1.Sets the color theme (light gray page, white panels, blue accent) using reusable CSS variables
-2.Lays out the page in two columns: the video area on the left and a 320px sidebar on the right
-3.Styles the dark 16:9 video stage and the "empty" message shown before a video starts
-4.Hides the real <video> element so only the canvas with the drawn boxes is visible
-5.Styles the buttons, including a blue primary button with hover and disabled states
-6.Styles the four stat cards (FPS, objects in view, IDs assigned, backend)
-7.Styles the tracked-objects list with a color swatch, name, ID and confidence
-8.Styles the sliders, dropdown and checkbox in the settings panel
-9.Shows status messages in gray, and error messages in red
-10.Adapts the layout for tablets and phones (the sidebar moves below the video on smaller screens)
-11.Adds keyboard focus outlines and turns off animations for users who prefer reduced motion
-*/
-/*
-CSS ভেরিয়েবল ব্যবহার করে রঙের থিম ঠিক করে (হালকা ধূসর পেজ, সাদা প্যানেল, নীল অ্যাকসেন্ট)
-পেজকে দুই কলামে সাজায়: বাম দিকে ভিডিওর জায়গা, ডান দিকে ৩২০px-এর সাইডবার
-গাঢ় রঙের ১৬:৯ ভিডিও স্টেজ এবং ভিডিও শুরুর আগে দেখানো "empty" বার্তাটি স্টাইল করে
-আসল <video> এলিমেন্টটি লুকিয়ে রাখে, যাতে শুধু বক্স আঁকা ক্যানভাসটি দেখা যায়
-বাটনগুলো স্টাইল করে, নীল প্রাইমারি বাটন এবং hover ও disabled অবস্থাসহ
-চারটি স্ট্যাট কার্ড (FPS, দৃশ্যে থাকা বস্তু, মোট ID, ব্যাকএন্ড) স্টাইল করে
-ট্র্যাক করা বস্তুর তালিকা স্টাইল করে, যেখানে থাকে রঙের চিহ্ন, নাম, ID ও কনফিডেন্স
-সেটিংস প্যানেলের স্লাইডার, ড্রপডাউন ও চেকবক্স স্টাইল করে
-সাধারণ বার্তা ধূসর রঙে এবং ত্রুটির বার্তা লাল রঙে দেখায়
-ট্যাবলেট ও ফোনের জন্য লেআউট মানিয়ে নেয় (ছোট স্ক্রিনে সাইডবার ভিডিওর নিচে চলে যায়)
-কিবোর্ড ব্যবহারকারীদের জন্য ফোকাস আউটলাইন যোগ করে এবং যারা অ্যানিমেশন কমাতে চান তাদের জন্য অ্যানিমেশন বন্ধ করে দেয়
-*/
+:root {
+  --page: #eceff4;
+  --panel: #ffffff;
+  --ink: #18212d;
+  --muted: #5a6676;
+  --line: #d3dae3;
+  --accent: #2563eb;
+  --accent-ink: #ffffff;
+  --stage: #0e151e;
+  --error: #b42318;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font: 400 15px/1.5 "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.app { max-width: 1240px; margin: 0 auto; padding: 24px 20px 48px; }
+
+/* Header */
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+h1 { margin: 0; font-size: 26px; line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; }
+.sub { margin: 4px 0 0; color: var(--muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Buttons */
+.btn {
+  font: inherit;
+  font-weight: 600;
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn:hover:not(:disabled) { border-color: #a9b4c2; background: #f6f8fb; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover:not(:disabled) { background: #1d4fd0; border-color: #1d4fd0; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Layout */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 20px; align-items: start; }
+.side { display: grid; gap: 16px; }
+
+/* Video stage */
+.stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--stage);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.hidden-video { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 24px;
+  text-align: center;
+  color: #c4ccd8;
+}
+.empty-title { margin: 0; font-size: 18px; font-weight: 600; color: #fff; }
+.empty-text { margin: 0; max-width: 46ch; color: #9aa6b6; }
+
+.message { margin: 12px 0; color: var(--muted); min-height: 1.5em; }
+.message.error { color: var(--error); font-weight: 500; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 0; }
+.stats > div { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+.stats dt { color: var(--muted); font-size: 13px; }
+.stats dd { margin: 2px 0 0; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Panels */
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+h2 { margin: 0 0 12px; font-size: 16px; font-weight: 600; }
+
+.tracked { list-style: none; margin: 0; padding: 0; max-height: 280px; overflow-y: auto; }
+.tracked li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid #e8ecf2; }
+.tracked li:first-child { border-top: 0; }
+.tracked-empty { color: var(--muted); }
+.swatch { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.tracked .name { flex: 1; font-weight: 500; }
+.tracked .id { color: var(--muted); font-variant-numeric: tabular-nums; }
+.tracked .conf { min-width: 3ch; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Settings */
+.field { display: block; margin-bottom: 14px; }
+.field-head { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.field output { color: var(--muted); font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.check { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.check input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+/* Focus */
+:focus-visible { outline: 3px solid rgba(37, 99, 235, 0.55); outline-offset: 2px; }
+
+/* Smaller screens */
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .app { padding: 16px 12px 32px; }
+  h1 { font-size: 22px; }
+  .actions { width: 100%; }
+  .actions .btn { flex: 1 1 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
