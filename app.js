@@ -13,7 +13,9 @@
   const $ = (sel) => document.querySelector(sel);
   const video = $('#video');
   const canvas = $('#canvas');
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d'); // transparent overlay: boxes, labels, trails only
+  const cap = document.createElement('canvas'); // offscreen frame grab sent to the detector
+  const cctx = cap.getContext('2d');
   const emptyState = $('#empty');
   const messageEl = $('#message');
   const btnWebcam = $('#btn-webcam');
@@ -86,6 +88,7 @@
   }
 
   function showIdle() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.hidden = true;
     emptyState.hidden = false;
     btnStop.disabled = true;
@@ -154,15 +157,15 @@
       // Process this frame
       const w = video.videoWidth;
       const h = video.videoHeight;
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
+      if (cap.width !== w || cap.height !== h) {
+        cap.width = canvas.width = w;
+        cap.height = canvas.height = h;
       }
-      ctx.drawImage(video, 0, 0, w, h);
+      cctx.drawImage(video, 0, 0, w, h);
 
       let predictions;
       try {
-        predictions = await model.detect(canvas, LOW_CONF);
+        predictions = await model.detect(cap, LOW_CONF);
       } catch (err) {
         console.error(err);
         if (id === runId) {
@@ -199,6 +202,7 @@
 
   /* ---------- Drawing ---------- */
   function drawTracks(tracks) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // wipe the previous boxes
     const s = Math.max(1, canvas.width / 900); // keep strokes readable on large frames
     ctx.font = `600 ${Math.round(13 * s)}px "Instrument Sans", system-ui, sans-serif`;
     ctx.textBaseline = 'middle';
